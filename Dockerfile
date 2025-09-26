@@ -3,6 +3,14 @@
 # Etapa 1: Build - Compilar TypeScript
 FROM node:18-alpine AS builder
 
+# Argumentos de build
+ARG NODE_ENV=production
+ARG PORT=3000
+ARG MONGODB_URI
+ARG THE_CAT_API_KEY
+ARG JWT_SECRET
+ARG JWT_EXPIRES_IN=24h
+
 # Establecer directorio de trabajo
 WORKDIR /app
 
@@ -21,6 +29,14 @@ RUN npm run build
 
 # Etapa 2: Production - Imagen final optimizada
 FROM node:18-alpine AS production
+
+# Argumentos de build para la etapa final
+ARG NODE_ENV=production
+ARG PORT=3000
+ARG MONGODB_URI
+ARG THE_CAT_API_KEY
+ARG JWT_SECRET
+ARG JWT_EXPIRES_IN=24h
 
 # Crear usuario no-root para seguridad
 RUN addgroup -g 1001 -S nodejs
@@ -42,12 +58,16 @@ COPY --from=builder /app/dist ./dist
 RUN chown -R nodejs:nodejs /app
 USER nodejs
 
-# Exponer puerto 3000
-EXPOSE 3000
+# Exponer puerto
+EXPOSE $PORT
 
-# Variables de entorno por defecto
-ENV NODE_ENV=production
-ENV PORT=3000
+# Variables de entorno usando los argumentos
+ENV NODE_ENV=$NODE_ENV
+ENV PORT=$PORT
+ENV MONGODB_URI=$MONGODB_URI
+ENV THE_CAT_API_KEY=$THE_CAT_API_KEY
+ENV JWT_SECRET=$JWT_SECRET
+ENV JWT_EXPIRES_IN=$JWT_EXPIRES_IN
 
 # Comando de inicio
 CMD ["node", "dist/main.js"]
