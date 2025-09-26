@@ -13,7 +13,7 @@ export interface AuthenticatedRequest extends Request {
 export class AuthMiddleware {
   constructor(private jwtService: JwtService) {}
 
-  authenticate = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+  authenticate = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
     try {
       const authHeader = req.headers.authorization;
       
@@ -23,12 +23,22 @@ export class AuthMiddleware {
       }
 
       const token = authHeader.substring(7);
-      const payload = this.jwtService.verifyToken(token);
+      const payload = await this.jwtService.verifyToken(token);
       
       req.user = payload;
       next();
-    } catch (error) {
-      res.status(401).json({ error: 'Token inválido' });
+    } catch (error: any) {
+      let errorMessage = 'Token inválido';
+      
+      if (error.message === 'Token expirado') {
+        errorMessage = 'Token expirado';
+      } else if (error.message === 'Usuario no encontrado') {
+        errorMessage = 'Usuario no encontrado';
+      } else if (error.message === 'Token inválido - datos inconsistentes') {
+        errorMessage = 'Token inválido';
+      }
+      
+      res.status(401).json({ error: errorMessage });
     }
   };
 

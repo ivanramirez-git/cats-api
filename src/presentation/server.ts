@@ -46,12 +46,12 @@ export class Server {
 
   private initializeRoutes(): void {
     // Inyección de dependencias
-    const jwtService = new JwtService();
-    const authMiddleware = new AuthMiddleware(jwtService);
-    
     const catApiClient = new CatApiClient();
     const catRepository = new CatRepository(catApiClient);
     const userRepository = new UserRepository();
+    
+    const jwtService = new JwtService(userRepository);
+    const authMiddleware = new AuthMiddleware(jwtService);
     
     const getBreedsUseCase = new GetBreeds(catRepository);
     const searchBreedsUseCase = new SearchBreeds(catRepository);
