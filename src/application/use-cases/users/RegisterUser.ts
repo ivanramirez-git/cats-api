@@ -1,6 +1,7 @@
 import { IUserRepository } from '../../../domain/repositories/IUserRepository';
 import { CreateUserRequest, User, UserRole } from '../../../domain/entities/User';
 import { PasswordService } from '../../services/PasswordService';
+import { ValidationError, ConflictError } from '../../../domain/exceptions/ApplicationError';
 
 export class RegisterUser {
   constructor(private userRepository: IUserRepository) {}
@@ -9,16 +10,16 @@ export class RegisterUser {
     const { email, password, role = UserRole.USER } = userData;
 
     if (!email || !password) {
-      throw new Error('Email y contraseña son requeridos');
+      throw new ValidationError('Email y contraseña son requeridos');
     }
 
     if (password.length < 6) {
-      throw new Error('La contraseña debe tener al menos 6 caracteres');
+      throw new ValidationError('La contraseña debe tener al menos 6 caracteres');
     }
 
     const existingUser = await this.userRepository.findByEmail(email);
     if (existingUser) {
-      throw new Error('El usuario ya existe');
+      throw new ConflictError('El usuario ya existe');
     }
 
     const hashedPassword = await PasswordService.hash(password);
