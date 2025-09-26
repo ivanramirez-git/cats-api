@@ -15,6 +15,7 @@ export class ValidationError extends ApplicationError {
 
   constructor(message: string) {
     super(message);
+    this.name = 'ValidationError';
   }
 }
 
@@ -24,6 +25,7 @@ export class ConflictError extends ApplicationError {
 
   constructor(message: string) {
     super(message);
+    this.name = 'ConflictError';
   }
 }
 
@@ -33,6 +35,7 @@ export class NotFoundError extends ApplicationError {
 
   constructor(message: string) {
     super(message);
+    this.name = 'NotFoundError';
   }
 }
 
@@ -42,6 +45,7 @@ export class UnauthorizedError extends ApplicationError {
 
   constructor(message: string) {
     super(message);
+    this.name = 'UnauthorizedError';
   }
 }
 
@@ -51,6 +55,7 @@ export class ForbiddenError extends ApplicationError {
 
   constructor(message: string) {
     super(message);
+    this.name = 'ForbiddenError';
   }
 }
 
@@ -60,5 +65,6 @@ export class InternalServerError extends ApplicationError {
 
   constructor(message: string = 'Error interno del servidor') {
     super(message);
+    this.name = 'InternalServerError';
   }
 }
