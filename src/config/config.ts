@@ -17,6 +17,7 @@ export interface IAppConfig {
 }
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
+const isDockerLocal = process.env.DOCKER_LOCAL === 'true';
 
 export const appConfig: IAppConfig = {
   port: parseInt(getEnvVar('PORT') || '3000', 10),
@@ -26,8 +27,8 @@ export const appConfig: IAppConfig = {
   jwtExpiresIn: getEnvVar('JWT_EXPIRES_IN') || '24h',
   environment: process.env.NODE_ENV || 'development',
   cors: {
-    origin: isDevelopment 
-      ? ['http://localhost:4200', 'http://127.0.0.1:4200']
+    origin: isDevelopment || isDockerLocal
+      ? ['http://localhost:4200', 'http://127.0.0.1:4200', 'http://localhost:3000', 'http://localhost']
       : ['https://cats.freeloz.com']
   },
   server: {
