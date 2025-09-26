@@ -1,12 +1,16 @@
 import { IUserRepository } from '../../../domain/repositories/IUserRepository';
-import { CreateUserRequest, User, UserRole } from '../../../domain/entities/User';
+import { CreateUserRequest, User, UserRole, AuthResponse } from '../../../domain/entities/User';
 import { PasswordService } from '../../services/PasswordService';
+import { JwtService } from '../../../infrastructure/adapters/jwt/JwtService';
 import { ValidationError, ConflictError } from '../../../domain/exceptions/ApplicationError';
 
 export class RegisterUser {
-  constructor(private userRepository: IUserRepository) {}
+  constructor(
+    private userRepository: IUserRepository,
+    private jwtService: JwtService
+  ) {}
 
-  async execute(userData: CreateUserRequest): Promise<Omit<User, 'password'>> {
+  async execute(userData: CreateUserRequest): Promise<AuthResponse> {
     const { email, password, role = UserRole.USER } = userData;
 
     if (!email || !password) {
@@ -29,7 +33,13 @@ export class RegisterUser {
       role
     });
 
+    // Generar token automáticamente después del registro
+    const token = this.jwtService.generateToken({ userId: user.id, email: user.email, role: user.role });
     const { password: _, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+
+    return {
+      token,
+      user: userWithoutPassword
+    };
   }
 }

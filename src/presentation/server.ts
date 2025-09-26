@@ -65,7 +65,7 @@ export class Server {
     const searchBreedsUseCase = new SearchBreeds(catRepository);
     const getBreedByIdUseCase = new GetBreedById(catRepository);
     const getImagesByBreedIdUseCase = new GetImagesByBreedId(catRepository);
-    const registerUserUseCase = new RegisterUser(userRepository);
+    const registerUserUseCase = new RegisterUser(userRepository, jwtService);
     const loginUserUseCase = new LoginUser(userRepository, jwtService);
     
     const catController = new CatController(
