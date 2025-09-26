@@ -41,8 +41,16 @@ export class CatApiClient {
   }
 
   async searchBreeds(query: string): Promise<Breed[]> {
-    const response = await this.client.get(`/breeds/search?q=${encodeURIComponent(query)}`);
-    return response.data;
+    // La API de TheCatAPI solo busca por nombre, pero necesitamos buscar por nombre, origen o temperamento
+    // Por lo tanto, obtenemos todas las razas y filtramos localmente
+    const allBreeds = await this.getBreeds();
+    const queryLower = query.toLowerCase();
+    
+    return allBreeds.filter(breed => 
+      breed.name.toLowerCase().includes(queryLower) ||
+      breed.origin?.toLowerCase().includes(queryLower) ||
+      breed.temperament?.toLowerCase().includes(queryLower)
+    );
   }
 
   async getImagesByBreedId(breedId: string, limit: number): Promise<Cat[]> {

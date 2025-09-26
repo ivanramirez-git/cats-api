@@ -157,16 +157,71 @@ describe('CatApiClient', () => {
 
   describe('searchBreeds', () => {
     it('should search breeds with encoded query', async () => {
-      const mockBreeds: Breed[] = [
+      const mockBreeds = [
         {
           id: 'abys',
           name: 'Abyssinian',
-          description: 'The Abyssinian is easy to care for',
-          temperament: 'Active, Energetic, Independent',
           origin: 'Egypt',
+          description: 'The Abyssinian is easy to care for...',
+          temperament: 'Active, Energetic, Independent, Intelligent, Gentle',
           life_span: '14 - 15',
+          alt_names: '',
           weight: {
             imperial: '7  -  10',
+            metric: '3 - 5'
+          }
+        },
+        {
+          id: 'pers',
+          name: 'Persian',
+          origin: 'Iran',
+          description: 'The Persian cat is a long-haired breed...',
+          temperament: 'Affectionate, Loyal, Docile, Patient, Quiet',
+          life_span: '12 - 17',
+          alt_names: 'Longhair or Persian Longhair',
+          weight: {
+            imperial: '7 - 12',
+            metric: '3 - 5'
+          }
+        }
+      ];
+
+      // Mock que la API devuelve todas las razas
+      mockAxiosInstance.get.mockResolvedValue({ data: mockBreeds });
+
+      const result = await catApiClient.searchBreeds('Abyssinian');
+
+      // Ahora esperamos que llame a /breeds en lugar de /breeds/search
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/breeds');
+      // Y que filtre localmente para devolver solo la raza que contiene 'Abyssinian'
+      expect(result).toEqual([mockBreeds[0]]);
+    });
+
+    it('should properly encode special characters in query', async () => {
+      const mockBreeds = [
+        {
+          id: 'mcoo',
+          name: 'Maine Coon',
+          origin: 'United States',
+          description: 'The Maine Coon is a large domesticated cat breed...',
+          temperament: 'Adaptable, Intelligent, Loving, Gentle, Independent',
+          life_span: '12 - 15',
+          alt_names: '',
+          weight: {
+            imperial: '12 - 18',
+            metric: '5 - 8'
+          }
+        },
+        {
+          id: 'pers',
+          name: 'Persian',
+          origin: 'Iran',
+          description: 'The Persian cat is a long-haired breed...',
+          temperament: 'Affectionate, Loyal, Docile, Patient, Quiet',
+          life_span: '12 - 17',
+          alt_names: 'Longhair or Persian Longhair',
+          weight: {
+            imperial: '7 - 12',
             metric: '3 - 5'
           }
         }
@@ -174,18 +229,12 @@ describe('CatApiClient', () => {
 
       mockAxiosInstance.get.mockResolvedValue({ data: mockBreeds });
 
-      const result = await catApiClient.searchBreeds('Abyssinian');
+      const result = await catApiClient.searchBreeds('Maine');
 
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/breeds/search?q=Abyssinian');
-      expect(result).toEqual(mockBreeds);
-    });
-
-    it('should properly encode special characters in query', async () => {
-      mockAxiosInstance.get.mockResolvedValue({ data: [] });
-
-      await catApiClient.searchBreeds('Maine Coon & Persian');
-
-      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/breeds/search?q=Maine%20Coon%20%26%20Persian');
+      // Ahora esperamos que llame a /breeds en lugar de /breeds/search
+      expect(mockAxiosInstance.get).toHaveBeenCalledWith('/breeds');
+      // Debe filtrar localmente y devolver solo la raza Maine Coon
+      expect(result).toEqual([mockBreeds[0]]);
     });
 
     it('should handle empty search results', async () => {
