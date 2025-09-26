@@ -1,115 +1,179 @@
 import { Cat, Breed } from '../../../../src/domain/entities/Cat';
+import { Breed as BreedEntity } from '../../../../src/domain/entities/Breed';
 
-describe('Cat Domain Entity', () => {
-  describe('Cat interface', () => {
-    it('should accept valid cat object with all properties', () => {
-      const validCat: Cat = {
-        id: 'MTY3ODIyMQ',
-        url: 'https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg',
-        width: 1204,
-        height: 1445,
-        breeds: [
-          {
-            id: 'abys',
-            name: 'Abyssinian',
-            description: 'The Abyssinian is easy to care for, and a joy to have in your home.',
-            temperament: 'Active, Energetic, Independent, Intelligent, Gentle',
-            origin: 'Egypt',
-            life_span: '14 - 15',
-            weight: {
-              imperial: '7  -  10',
-              metric: '3 - 5'
-            }
-          }
-        ]
-      };
-
-      expect(validCat.id).toBe('MTY3ODIyMQ');
-      expect(validCat.url).toBe('https://cdn2.thecatapi.com/images/MTY3ODIyMQ.jpg');
-      expect(validCat.width).toBe(1204);
-      expect(validCat.height).toBe(1445);
-      expect(validCat.breeds).toHaveLength(1);
-      expect(validCat.breeds![0].name).toBe('Abyssinian');
-    });
-
-    it('should accept cat without breeds', () => {
-      const catWithoutBreeds: Cat = {
-        id: 'test123',
+describe('Cat Entity', () => {
+  describe('Cat Interface', () => {
+    it('should have all required properties', () => {
+      const cat: Cat = {
+        id: 'cat123',
         url: 'https://example.com/cat.jpg',
         width: 800,
         height: 600
       };
 
-      expect(catWithoutBreeds.id).toBe('test123');
-      expect(catWithoutBreeds.url).toBe('https://example.com/cat.jpg');
-      expect(catWithoutBreeds.width).toBe(800);
-      expect(catWithoutBreeds.height).toBe(600);
-      expect(catWithoutBreeds.breeds).toBeUndefined();
+      expect(cat.id).toBe('cat123');
+      expect(cat.url).toBe('https://example.com/cat.jpg');
+      expect(cat.width).toBe(800);
+      expect(cat.height).toBe(600);
+      expect(cat.breeds).toBeUndefined();
     });
 
-    it('should accept cat with empty breeds array', () => {
-      const catWithEmptyBreeds: Cat = {
-        id: 'test456',
-        url: 'https://example.com/cat2.jpg',
-        width: 1000,
-        height: 800,
+    it('should allow optional breeds property', () => {
+      const breed: Breed = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        }
+      };
+
+      const cat: Cat = {
+        id: 'cat123',
+        url: 'https://example.com/cat.jpg',
+        width: 800,
+        height: 600,
+        breeds: [breed]
+      };
+
+      expect(cat.breeds).toBeDefined();
+      expect(cat.breeds).toHaveLength(1);
+      expect(cat.breeds![0]).toEqual(breed);
+    });
+
+    it('should allow empty breeds array', () => {
+      const cat: Cat = {
+        id: 'cat123',
+        url: 'https://example.com/cat.jpg',
+        width: 800,
+        height: 600,
         breeds: []
       };
 
-      expect(catWithEmptyBreeds.breeds).toEqual([]);
-      expect(catWithEmptyBreeds.breeds).toHaveLength(0);
+      expect(cat.breeds).toBeDefined();
+      expect(cat.breeds).toHaveLength(0);
     });
 
-    it('should have all required properties', () => {
+    it('should allow multiple breeds', () => {
+      const breed1: Breed = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        }
+      };
+
+      const breed2: Breed = {
+        id: 'beng',
+        name: 'Bengal',
+        description: 'Energetic and athletic cat',
+        temperament: 'Alert, Agile, Energetic',
+        origin: 'United States',
+        life_span: '14 - 16',
+        weight: {
+          imperial: '8 - 15',
+          metric: '4 - 7'
+        }
+      };
+
       const cat: Cat = {
-        id: 'test-id',
-        url: 'https://test.com/image.jpg',
-        width: 500,
-        height: 400
+        id: 'cat123',
+        url: 'https://example.com/cat.jpg',
+        width: 800,
+        height: 600,
+        breeds: [breed1, breed2]
       };
 
-      expect(cat).toHaveProperty('id');
-      expect(cat).toHaveProperty('url');
-      expect(cat).toHaveProperty('width');
-      expect(cat).toHaveProperty('height');
+      expect(cat.breeds).toHaveLength(2);
+      expect(cat.breeds![0]).toEqual(breed1);
+      expect(cat.breeds![1]).toEqual(breed2);
     });
 
-    it('should accept multiple breeds', () => {
-      const catWithMultipleBreeds: Cat = {
-        id: 'multi123',
-        url: 'https://example.com/multi-breed-cat.jpg',
-        width: 1200,
-        height: 900,
-        breeds: [
-          {
-            id: 'pers',
-            name: 'Persian',
-            description: 'Persian cat description',
-            temperament: 'Calm, Gentle',
-            origin: 'Iran',
-            life_span: '12 - 17',
-            weight: { imperial: '7 - 12', metric: '3 - 5' }
-          },
-          {
-            id: 'siam',
-            name: 'Siamese',
-            description: 'Siamese cat description',
-            temperament: 'Active, Social',
-            origin: 'Thailand',
-            life_span: '12 - 15',
-            weight: { imperial: '6 - 14', metric: '3 - 6' }
-          }
-        ]
+    it('should validate required string properties', () => {
+      const cat: Cat = {
+        id: '',
+        url: '',
+        width: 0,
+        height: 0
       };
 
-      expect(catWithMultipleBreeds.breeds).toHaveLength(2);
-      expect(catWithMultipleBreeds.breeds![0].name).toBe('Persian');
-      expect(catWithMultipleBreeds.breeds![1].name).toBe('Siamese');
+      expect(typeof cat.id).toBe('string');
+      expect(typeof cat.url).toBe('string');
+      expect(typeof cat.width).toBe('number');
+      expect(typeof cat.height).toBe('number');
+    });
+
+    it('should validate numeric properties', () => {
+      const cat: Cat = {
+        id: 'cat123',
+        url: 'https://example.com/cat.jpg',
+        width: 1920,
+        height: 1080
+      };
+
+      expect(cat.width).toBeGreaterThan(0);
+      expect(cat.height).toBeGreaterThan(0);
+      expect(Number.isInteger(cat.width)).toBe(true);
+      expect(Number.isInteger(cat.height)).toBe(true);
     });
   });
 
-  describe('Breed interface (within Cat)', () => {
-    it('should accept valid breed object', () => {
+  describe('Breed Interface (from Cat.ts)', () => {
+    it('should have all required properties', () => {
+      const breed: Breed = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'The Abyssinian is easy to care for, and a joy to have in your home.',
+        temperament: 'Active, Energetic, Independent, Intelligent, Gentle',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        }
+      };
+
+      expect(breed.id).toBe('abys');
+      expect(breed.name).toBe('Abyssinian');
+      expect(breed.description).toBeDefined();
+      expect(breed.temperament).toBeDefined();
+      expect(breed.origin).toBe('Egypt');
+      expect(breed.life_span).toBe('14 - 15');
+      expect(breed.weight).toBeDefined();
+      expect(breed.weight.imperial).toBe('7 - 10');
+      expect(breed.weight.metric).toBe('3 - 5');
+    });
+
+    it('should validate weight object structure', () => {
+      const breed: Breed = {
+        id: 'beng',
+        name: 'Bengal',
+        description: 'Bengal cats are athletic and energetic.',
+        temperament: 'Alert, Agile, Energetic, Demanding, Intelligent',
+        origin: 'United States',
+        life_span: '14 - 16',
+        weight: {
+          imperial: '8 - 15',
+          metric: '4 - 7'
+        }
+      };
+
+      expect(breed.weight).toHaveProperty('imperial');
+      expect(breed.weight).toHaveProperty('metric');
+      expect(typeof breed.weight.imperial).toBe('string');
+      expect(typeof breed.weight.metric).toBe('string');
+    });
+
+    it('should validate all string properties are strings', () => {
       const breed: Breed = {
         id: 'test',
         name: 'Test Breed',
@@ -123,46 +187,130 @@ describe('Cat Domain Entity', () => {
         }
       };
 
-      expect(breed.id).toBe('test');
-      expect(breed.name).toBe('Test Breed');
-      expect(breed.weight.imperial).toBe('5 - 10');
-      expect(breed.weight.metric).toBe('2 - 5');
+      expect(typeof breed.id).toBe('string');
+      expect(typeof breed.name).toBe('string');
+      expect(typeof breed.description).toBe('string');
+      expect(typeof breed.temperament).toBe('string');
+      expect(typeof breed.origin).toBe('string');
+      expect(typeof breed.life_span).toBe('string');
     });
+  });
+});
 
-    it('should have all required breed properties', () => {
-      const breed: Breed = {
-        id: 'req-test',
-        name: 'Required Test',
-        description: 'Required description',
-        temperament: 'Required temperament',
-        origin: 'Required origin',
-        life_span: '10 - 12',
+describe('Breed Entity (from Breed.ts)', () => {
+  describe('BreedEntity Interface', () => {
+    it('should have all required properties', () => {
+      const breed: BreedEntity = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'The Abyssinian is easy to care for, and a joy to have in your home.',
+        temperament: 'Active, Energetic, Independent, Intelligent, Gentle',
+        origin: 'Egypt',
+        life_span: '14 - 15',
         weight: {
-          imperial: '5 - 8',
-          metric: '2 - 4'
+          imperial: '7 - 10',
+          metric: '3 - 5'
         }
       };
 
-      expect(breed).toHaveProperty('id');
-      expect(breed).toHaveProperty('name');
-      expect(breed).toHaveProperty('description');
-      expect(breed).toHaveProperty('temperament');
-      expect(breed).toHaveProperty('origin');
-      expect(breed).toHaveProperty('life_span');
-      expect(breed).toHaveProperty('weight');
+      expect(breed.id).toBe('abys');
+      expect(breed.name).toBe('Abyssinian');
+      expect(breed.description).toBeDefined();
+      expect(breed.temperament).toBeDefined();
+      expect(breed.origin).toBe('Egypt');
+      expect(breed.life_span).toBe('14 - 15');
+      expect(breed.weight).toBeDefined();
+      expect(breed.weight.imperial).toBe('7 - 10');
+      expect(breed.weight.metric).toBe('3 - 5');
     });
 
-    it('should have weight with imperial and metric', () => {
-      const breed: Breed = {
-        id: 'weight-test',
-        name: 'Weight Test',
-        description: 'Test',
-        temperament: 'Test',
-        origin: 'Test',
-        life_span: '10 - 15',
+    it('should allow optional wikipedia_url property', () => {
+      const breed: BreedEntity = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
         weight: {
-          imperial: '6 - 12',
-          metric: '3 - 6'
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        },
+        wikipedia_url: 'https://en.wikipedia.org/wiki/Abyssinian_cat'
+      };
+
+      expect(breed.wikipedia_url).toBe('https://en.wikipedia.org/wiki/Abyssinian_cat');
+      expect(typeof breed.wikipedia_url).toBe('string');
+    });
+
+    it('should allow optional reference_image_id property', () => {
+      const breed: BreedEntity = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        },
+        reference_image_id: 'img123'
+      };
+
+      expect(breed.reference_image_id).toBe('img123');
+      expect(typeof breed.reference_image_id).toBe('string');
+    });
+
+    it('should allow both optional properties', () => {
+      const breed: BreedEntity = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        },
+        wikipedia_url: 'https://en.wikipedia.org/wiki/Abyssinian_cat',
+        reference_image_id: 'img123'
+      };
+
+      expect(breed.wikipedia_url).toBeDefined();
+      expect(breed.reference_image_id).toBeDefined();
+    });
+
+    it('should work without optional properties', () => {
+      const breed: BreedEntity = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
+        }
+      };
+
+      expect(breed.wikipedia_url).toBeUndefined();
+      expect(breed.reference_image_id).toBeUndefined();
+    });
+
+    it('should validate weight object structure', () => {
+      const breed: BreedEntity = {
+        id: 'beng',
+        name: 'Bengal',
+        description: 'Bengal cats are athletic and energetic.',
+        temperament: 'Alert, Agile, Energetic, Demanding, Intelligent',
+        origin: 'United States',
+        life_span: '14 - 16',
+        weight: {
+          imperial: '8 - 15',
+          metric: '4 - 7'
         }
       };
 
@@ -173,254 +321,123 @@ describe('Cat Domain Entity', () => {
     });
   });
 
-  describe('Real cat examples', () => {
-    it('should handle cat with Abyssinian breed', () => {
-      const abyssinianCat: Cat = {
-        id: 'abys_001',
-        url: 'https://cdn2.thecatapi.com/images/abys_001.jpg',
-        width: 1200,
-        height: 800,
-        breeds: [
-          {
-            id: 'abys',
-            name: 'Abyssinian',
-            description: 'The Abyssinian is easy to care for, and a joy to have in your home. They\'re affectionate cats and love both people and other animals.',
-            temperament: 'Active, Energetic, Independent, Intelligent, Gentle',
-            origin: 'Egypt',
-            life_span: '14 - 15',
-            weight: {
-              imperial: '7  -  10',
-              metric: '3 - 5'
-            }
-          }
-        ]
-      };
-
-      expect(abyssinianCat.breeds![0].name).toBe('Abyssinian');
-      expect(abyssinianCat.breeds![0].origin).toBe('Egypt');
-      expect(abyssinianCat.breeds![0].temperament).toContain('Active');
-    });
-
-    it('should handle cat with Persian breed', () => {
-      const persianCat: Cat = {
-        id: 'pers_001',
-        url: 'https://cdn2.thecatapi.com/images/pers_001.jpg',
-        width: 1000,
-        height: 1200,
-        breeds: [
-          {
-            id: 'pers',
-            name: 'Persian',
-            description: 'The Persian cat is a long-haired breed of cat characterized by its round face and short muzzle.',
-            temperament: 'Affectionate, Docile, Quiet, Gentle, Calm',
-            origin: 'Iran (Persia)',
-            life_span: '14 - 15',
-            weight: {
-              imperial: '7 - 12',
-              metric: '3 - 5'
-            }
-          }
-        ]
-      };
-
-      expect(persianCat.breeds![0].name).toBe('Persian');
-      expect(persianCat.breeds![0].origin).toBe('Iran (Persia)');
-      expect(persianCat.breeds![0].temperament).toContain('Affectionate');
-    });
-
-    it('should handle random cat without breed information', () => {
-      const randomCat: Cat = {
-        id: 'random_123',
-        url: 'https://cdn2.thecatapi.com/images/random_123.jpg',
-        width: 800,
-        height: 600
-      };
-
-      expect(randomCat.id).toBe('random_123');
-      expect(randomCat.url).toContain('cdn2.thecatapi.com');
-      expect(randomCat.breeds).toBeUndefined();
-    });
-  });
-
-  describe('Image properties validation', () => {
-    it('should handle different image dimensions', () => {
-      const cats: Cat[] = [
-        {
-          id: 'square',
-          url: 'https://example.com/square.jpg',
-          width: 500,
-          height: 500
+  describe('Relationship between Cat and Breed', () => {
+    it('should allow Cat to contain Breed entities', () => {
+      const breedEntity: BreedEntity = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active and playful cat',
+        temperament: 'Active, Energetic, Independent',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: {
+          imperial: '7 - 10',
+          metric: '3 - 5'
         },
-        {
-          id: 'landscape',
-          url: 'https://example.com/landscape.jpg',
-          width: 1920,
-          height: 1080
-        },
-        {
-          id: 'portrait',
-          url: 'https://example.com/portrait.jpg',
-          width: 600,
-          height: 800
-        }
-      ];
-
-      cats.forEach(cat => {
-        expect(typeof cat.width).toBe('number');
-        expect(typeof cat.height).toBe('number');
-        expect(cat.width).toBeGreaterThan(0);
-        expect(cat.height).toBeGreaterThan(0);
-      });
-    });
-
-    it('should handle very large image dimensions', () => {
-      const largeCat: Cat = {
-        id: 'large_image',
-        url: 'https://example.com/large.jpg',
-        width: 4000,
-        height: 3000
+        wikipedia_url: 'https://en.wikipedia.org/wiki/Abyssinian_cat',
+        reference_image_id: 'img123'
       };
 
-      expect(largeCat.width).toBe(4000);
-      expect(largeCat.height).toBe(3000);
-      expect(largeCat.width).toBeGreaterThan(1000);
-      expect(largeCat.height).toBeGreaterThan(1000);
-    });
-
-    it('should handle small image dimensions', () => {
-      const smallCat: Cat = {
-        id: 'small_image',
-        url: 'https://example.com/small.jpg',
-        width: 100,
-        height: 150
+      // Convert BreedEntity to Breed (Cat.ts version)
+      const breed: Breed = {
+        id: breedEntity.id,
+        name: breedEntity.name,
+        description: breedEntity.description,
+        temperament: breedEntity.temperament,
+        origin: breedEntity.origin,
+        life_span: breedEntity.life_span,
+        weight: breedEntity.weight
       };
 
-      expect(smallCat.width).toBe(100);
-      expect(smallCat.height).toBe(150);
-      expect(smallCat.width).toBeLessThan(200);
-      expect(smallCat.height).toBeLessThan(200);
-    });
-  });
-
-  describe('URL validation', () => {
-    it('should handle different URL formats', () => {
-      const cats: Cat[] = [
-        {
-          id: 'cdn1',
-          url: 'https://cdn2.thecatapi.com/images/test1.jpg',
-          width: 500,
-          height: 400
-        },
-        {
-          id: 'cdn2',
-          url: 'https://cdn2.thecatapi.com/images/test2.png',
-          width: 600,
-          height: 500
-        },
-        {
-          id: 'other',
-          url: 'https://example.com/cat.jpeg',
-          width: 700,
-          height: 600
-        }
-      ];
-
-      cats.forEach(cat => {
-        expect(cat.url).toMatch(/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i);
-      });
-    });
-
-    it('should handle long URLs', () => {
-      const longUrlCat: Cat = {
-        id: 'long_url',
-        url: 'https://very.long.domain.name.example.com/path/to/very/deep/directory/structure/with/long/filename.jpg',
-        width: 800,
-        height: 600
-      };
-
-      expect(longUrlCat.url.length).toBeGreaterThan(50);
-      expect(longUrlCat.url).toContain('https://');
-      expect(longUrlCat.url).toContain('.jpg');
-    });
-  });
-
-  describe('Edge cases', () => {
-    it('should handle cat with breed having special characters', () => {
-      const specialCat: Cat = {
-        id: 'special_123',
-        url: 'https://example.com/special.jpg',
+      const cat: Cat = {
+        id: 'cat123',
+        url: 'https://example.com/cat.jpg',
         width: 800,
         height: 600,
-        breeds: [
-          {
-            id: 'special',
-            name: 'Café Breed',
-            description: 'A breed with special characters: àáâãäåæçèéêë',
-            temperament: 'Énergique, Intelligent, Sociable',
-            origin: 'François, Île-de-France',
-            life_span: '12 - 16',
-            weight: {
-              imperial: '6 - 10',
-              metric: '3 - 5'
-            }
-          }
-        ]
+        breeds: [breed]
       };
 
-      expect(specialCat.breeds![0].name).toBe('Café Breed');
-      expect(specialCat.breeds![0].description).toContain('àáâãäåæçèéêë');
-      expect(specialCat.breeds![0].origin).toBe('François, Île-de-France');
+      expect(cat.breeds![0].id).toBe(breedEntity.id);
+      expect(cat.breeds![0].name).toBe(breedEntity.name);
+      expect(cat.breeds![0].weight).toEqual(breedEntity.weight);
     });
 
-    it('should handle cat ID with different formats', () => {
-      const cats: Cat[] = [
-        {
-          id: 'MTY3ODIyMQ', // Base64-like
-          url: 'https://example.com/1.jpg',
-          width: 500,
-          height: 400
+    it('should handle breed compatibility between interfaces', () => {
+      const fullBreed: BreedEntity = {
+        id: 'beng',
+        name: 'Bengal',
+        description: 'Bengal cats are athletic and energetic.',
+        temperament: 'Alert, Agile, Energetic, Demanding, Intelligent',
+        origin: 'United States',
+        life_span: '14 - 16',
+        weight: {
+          imperial: '8 - 15',
+          metric: '4 - 7'
         },
-        {
-          id: 'abc123def456', // Alphanumeric
-          url: 'https://example.com/2.jpg',
-          width: 600,
-          height: 500
-        },
-        {
-          id: '12345', // Numeric
-          url: 'https://example.com/3.jpg',
-          width: 700,
-          height: 600
-        }
-      ];
+        wikipedia_url: 'https://en.wikipedia.org/wiki/Bengal_cat',
+        reference_image_id: 'bengal123'
+      };
 
-      cats.forEach(cat => {
-        expect(typeof cat.id).toBe('string');
-        expect(cat.id.length).toBeGreaterThan(0);
-      });
+      // BreedEntity has all properties that Breed requires
+      const catBreed: Breed = fullBreed;
+
+      const cat: Cat = {
+        id: 'cat456',
+        url: 'https://example.com/bengal.jpg',
+        width: 1024,
+        height: 768,
+        breeds: [catBreed]
+      };
+
+      expect(cat.breeds![0]).toEqual(expect.objectContaining({
+        id: 'beng',
+        name: 'Bengal',
+        description: expect.any(String),
+        temperament: expect.any(String),
+        origin: 'United States',
+        life_span: '14 - 16',
+        weight: {
+          imperial: '8 - 15',
+          metric: '4 - 7'
+        }
+      }));
     });
 
-    it('should handle extreme aspect ratios', () => {
-      const extremeCats: Cat[] = [
-        {
-          id: 'wide',
-          url: 'https://example.com/wide.jpg',
-          width: 2000,
-          height: 100 // Very wide
-        },
-        {
-          id: 'tall',
-          url: 'https://example.com/tall.jpg',
-          width: 100,
-          height: 2000 // Very tall
-        }
-      ];
+    it('should validate breed array operations', () => {
+      const breed1: Breed = {
+        id: 'abys',
+        name: 'Abyssinian',
+        description: 'Active cat',
+        temperament: 'Active, Energetic',
+        origin: 'Egypt',
+        life_span: '14 - 15',
+        weight: { imperial: '7 - 10', metric: '3 - 5' }
+      };
 
-      extremeCats.forEach(cat => {
-        const aspectRatio = cat.width / cat.height;
-        expect(aspectRatio).toBeGreaterThan(0);
-        expect(typeof aspectRatio).toBe('number');
-      });
+      const breed2: Breed = {
+        id: 'beng',
+        name: 'Bengal',
+        description: 'Athletic cat',
+        temperament: 'Alert, Agile',
+        origin: 'United States',
+        life_span: '14 - 16',
+        weight: { imperial: '8 - 15', metric: '4 - 7' }
+      };
+
+      const cat: Cat = {
+        id: 'cat789',
+        url: 'https://example.com/mixed.jpg',
+        width: 800,
+        height: 600,
+        breeds: [breed1, breed2]
+      };
+
+      // Test array operations
+      expect(cat.breeds).toHaveLength(2);
+      expect(cat.breeds!.map(b => b.id)).toEqual(['abys', 'beng']);
+      expect(cat.breeds!.find(b => b.id === 'abys')).toEqual(breed1);
+      expect(cat.breeds!.some(b => b.origin === 'Egypt')).toBe(true);
+      expect(cat.breeds!.every(b => typeof b.name === 'string')).toBe(true);
     });
   });
 });
