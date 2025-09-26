@@ -8,11 +8,14 @@
     "start": "node dist/main.js",
     "dev": "tsc && nodemon dist/main.js",
     "start:prod": "npm run build && npm run start",
+    "start:dev": "npm run dev",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "env:dev": "export NODE_ENV=development",
+    "env:prod": "export NODE_ENV=production"
   },
   "keywords": [],
   "author": "",

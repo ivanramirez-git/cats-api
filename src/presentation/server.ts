@@ -39,7 +39,15 @@ export class Server {
 
   private initializeMiddlewares(): void {
     this.app.use(helmet());
-    this.app.use(cors());
+    
+    // Configuración de CORS basada en el entorno
+    this.app.use(cors({
+      origin: appConfig.cors.origin,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+    
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   }
@@ -97,8 +105,8 @@ export class Server {
         },
         servers: [
           {
-            url: `http://localhost:${this.port}`,
-            description: 'Servidor de desarrollo'
+            url: appConfig.server.baseUrl,
+            description: appConfig.environment === 'production' ? 'Servidor de producción' : 'Servidor de desarrollo'
           }
         ]
       },
