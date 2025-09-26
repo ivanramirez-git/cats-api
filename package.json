@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/main.js",
-    "dev": "npm run clean && tsc -w & nodemon dist/main.js",
+    "dev": "tsc && nodemon dist/main.js",
     "start:prod": "npm run build && npm run start",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
@@ -16,9 +16,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0",
+    "axios": "^1.12.2",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
+    "express": "^5.1.0",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.2",
@@ -26,13 +28,16 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "typescript": "^5.9.2",
+    "@types/axios": "^0.9.36",
+    "@types/bcrypt": "^6.0.0",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    "nodemon": "^3.1.10"
+    "concurrently": "^9.2.1",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.9.2"
   }
 }
