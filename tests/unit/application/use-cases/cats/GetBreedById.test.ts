@@ -136,10 +136,8 @@ describe('GetBreedById Use Case', () => {
       expect(result).toBeNull();
     });
 
-    it('should return null for empty string ID', async () => {
-      const result = await getBreedById.execute('');
-      
-      expect(result).toBeNull();
+    it('should throw ValidationError for empty string ID', async () => {
+      await expect(getBreedById.execute('')).rejects.toThrow('ID de raza requerido');
     });
 
     it('should return null when repository is empty', async () => {

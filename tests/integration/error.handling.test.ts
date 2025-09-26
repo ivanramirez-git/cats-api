@@ -180,12 +180,12 @@ describe('Error Handling Integration Tests', () => {
   });
 
   describe('Internal Server Errors (500)', () => {
-    it('should return 500 for invalid limit parameter in images endpoint', async () => {
+    it('should return 400 for invalid limit parameter in images endpoint', async () => {
       const response = await request(app)
         .get('/api/images/imagesbybreedid')
         .query({ breed_id: 'abys', limit: -1 })
         .set('Authorization', `Bearer ${validToken}`)
-        .expect(500);
+        .expect(400);
 
       expect(response.body).toHaveProperty('error');
       expect(typeof response.body.error).toBe('string');
@@ -264,17 +264,15 @@ describe('Error Handling Integration Tests', () => {
       consoleSpy.mockRestore();
     });
 
-    it('should log server errors with console.error', async () => {
+    it('should log client errors with console.log for validation errors', async () => {
       await request(app)
         .get('/api/images/imagesbybreedid')
         .query({ breed_id: 'abys', limit: -1 })
         .set('Authorization', `Bearer ${validToken}`)
-        .expect(500);
+        .expect(400);
 
-      // Server errors (5xx) should be logged with console.error
-      expect(consoleErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Error 500'));
-      
-      consoleErrorSpy.mockRestore();
+      // Client errors (4xx) should be logged with console.log
+      expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Client error 400'));
     });
   });
 });

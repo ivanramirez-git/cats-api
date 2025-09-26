@@ -363,23 +363,23 @@ describe('E2E Integration Tests', () => {
         .set('Authorization', `Bearer ${token}`)
         .expect(200);
 
-      // Test limit too high (should fail with 500 because it's handled by use case)
+      // Test limit too high (should fail with 400 because it's a validation error)
       await request(app)
         .get('/api/images/imagesbybreedid?breed_id=abys&limit=101')
         .set('Authorization', `Bearer ${token}`)
-        .expect(500);
+        .expect(400);
 
-      // Test negative limit (should fail with 500 because it's handled by use case)
+      // Test negative limit (should fail with 400 because it's a validation error)
       await request(app)
         .get('/api/images/imagesbybreedid?breed_id=abys&limit=-1')
         .set('Authorization', `Bearer ${token}`)
-        .expect(500);
+        .expect(400);
 
-      // Test zero limit (should fail with 500 because it's handled by use case)
+      // Test zero limit (should fail with 400 because it's a validation error)
       await request(app)
         .get('/api/images/imagesbybreedid?breed_id=abys&limit=0')
         .set('Authorization', `Bearer ${token}`)
-        .expect(500);
+        .expect(400);
     });
 
     it('should validate search query parameters', async () => {

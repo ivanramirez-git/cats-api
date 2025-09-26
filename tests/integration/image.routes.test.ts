@@ -197,7 +197,7 @@ describe('Image Routes Integration Tests', () => {
       const response = await request(app)
         .get('/api/images/imagesbybreedid?breed_id=abys&limit=0')
         .set('Authorization', `Bearer ${authToken}`)
-        .expect(500);
+        .expect(400);
 
       expect(response.body).toHaveProperty('error');
     });
@@ -206,7 +206,7 @@ describe('Image Routes Integration Tests', () => {
       const response = await request(app)
         .get('/api/images/imagesbybreedid?breed_id=abys&limit=101')
         .set('Authorization', `Bearer ${authToken}`)
-        .expect(500);
+        .expect(400);
 
       expect(response.body).toHaveProperty('error');
     });
