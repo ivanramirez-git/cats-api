@@ -5,7 +5,7 @@ export interface IAppConfig {
   mongoUri: string;
   catApiKey: string;
   jwtSecret: string;
-  jwtExpiresIn: string;
+  jwtExpiresIn: string | number;
 }
 
 export const appConfig: IAppConfig = {
