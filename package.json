@@ -1,26 +1,38 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Esta estructura separa la aplicación en las tres capas clave: **Dominio**, **Aplicación**, y **Infraestructura/Adaptadores**, garantizando Inversión de Dependencias (DIP) y testabilidad.",
-  "main": "index.js",
+  "description": "Backend service for Cat App using Express and TypeScript",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
-    "start": "tsc && node dist/index.js",
-    "dev": "tsc --watch & node --watch dist/index.js",
+    "start": "node dist/main.js",
+    "dev": "npm run clean && tsc -w & nodemon dist/main.js",
     "start:prod": "npm run build && npm run start",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: No test runners configured yet!\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "typescript": "^5.9.2",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",
-    "typescript": "^5.9.2"
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "nodemon": "^3.1.10"
   }
 }
