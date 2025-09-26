@@ -17,5 +17,7 @@ module.exports = {
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'html'],
   moduleFileExtensions: ['ts', 'js', 'json'],
-  verbose: true
+  verbose: true,
+  // Run tests sequentially to avoid database conflicts
+  maxWorkers: 1
 };

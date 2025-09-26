@@ -23,9 +23,17 @@ export class CatApiClient {
   async getBreedById(breedId: string): Promise<Breed | null> {
     try {
       const response = await this.client.get(`/breeds/${breedId}`);
+      // If response is "INVALID_DATA" string, return null
+      if (typeof response.data === 'string' && response.data === 'INVALID_DATA') {
+        return null;
+      }
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
+        return null;
+      }
+      // Handle cases where API returns non-JSON response
+      if (error.response?.data === 'INVALID_DATA') {
         return null;
       }
       throw error;

@@ -118,6 +118,10 @@ export class Server {
     this.app.use(ErrorMiddleware.handle);
   }
 
+  public getApp(): express.Application {
+    return this.app;
+  }
+
   public async start(): Promise<void> {
     try {
       await mongoose.connect(appConfig.mongoUri);

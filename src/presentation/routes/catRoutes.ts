@@ -104,49 +104,6 @@ export function createCatRoutes(
 
   /**
    * @swagger
-   * /api/cats/breeds/{breed_id}:
-   *   get:
-   *     summary: Obtener una raza específica por ID (requiere autenticación)
-   *     tags: [Cats]
-   *     security:
-   *       - bearerAuth: []
-   *     parameters:
-   *       - in: path
-   *         name: breed_id
-   *         required: true
-   *         schema:
-   *           type: string
-   *         description: ID de la raza de gato
-   *     responses:
-   *       200:
-   *         description: Raza obtenida exitosamente
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/CatBreed'
-   *       401:
-   *         description: Token de autenticación requerido o inválido
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *       404:
-   *         description: Raza no encontrada
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   *       500:
-   *         description: Error interno del servidor
-   *         content:
-   *           application/json:
-   *             schema:
-   *               $ref: '#/components/schemas/ErrorResponse'
-   */
-  router.get('/breeds/:breed_id', authMiddleware.authenticate, catController.getBreedById);
-
-  /**
-   * @swagger
    * /api/cats/breeds/search:
    *   get:
    *     summary: Buscar razas de gatos por nombre (requiere autenticación)
@@ -189,6 +146,49 @@ export function createCatRoutes(
    *               $ref: '#/components/schemas/ErrorResponse'
    */
   router.get('/breeds/search', authMiddleware.authenticate, catController.searchBreeds);
+
+  /**
+   * @swagger
+   * /api/cats/breeds/{breed_id}:
+   *   get:
+   *     summary: Obtener una raza específica por ID (requiere autenticación)
+   *     tags: [Cats]
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: breed_id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: ID de la raza de gato
+   *     responses:
+   *       200:
+   *         description: Raza obtenida exitosamente
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/CatBreed'
+   *       401:
+   *         description: Token de autenticación requerido o inválido
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *       404:
+   *         description: Raza no encontrada
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   *       500:
+   *         description: Error interno del servidor
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
+  router.get('/breeds/:breed_id', authMiddleware.authenticate, catController.getBreedById);
 
   return router;
 }
